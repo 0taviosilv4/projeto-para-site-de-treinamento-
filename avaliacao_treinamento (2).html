@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Emerson Training | Avaliação de treinamento</title>
+<meta name="description" content="Emerson Training: avaliação de treinamento, evolução do aluno e montagem de treinos.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%2322c55e'/%3E%3Cpath fill='%2305100a' d='M16 11h18a3 3 0 010 6H19v4h11a3 3 0 010 6H19v4h15a3 3 0 010 6H16a3 3 0 01-3-3V14a3 3 0 013-3z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,800&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+@property --p{syntax:'<number>';inherits:false;initial-value:0}
+:root{color-scheme:dark;--bg:#080908;--card:#0f110f;--card2:#151815;--ink:#f3f5f3;--muted:#8a948b;--line:#1f241f;--brand:#22c55e;--brand-ink:#03140a;--soft:rgba(34,197,94,.14);--ok:#22c55e;--bad:#ff5a5f}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,sans-serif;line-height:1.5}
+body::before{content:"";position:fixed;z-index:-1;pointer-events:none;background:radial-gradient(38% 38% at 18% 18%,rgba(34,197,94,.17),transparent),radial-gradient(34% 34% at 85% 72%,rgba(34,197,94,.10),transparent);animation:drift 20s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(6%,8%) scale(1.15)}}
+h1,h2,h3{font-family:'Barlow Condensed','Arial Narrow',Figtree,sans-serif;margin:0}
+.wrap{overflow-x:clip;max-width:860px;margin:0 auto;padding:14px 14px calc(40px + env(safe-area-inset-bottom))}
+header{margin-bottom:8px}
+.top{display:flex;align-items:center;gap:10px;padding:4px 0 28px}
+.logo{width:40px;height:40px;flex:none}
+.brand{font:700 24px 'Barlow Condensed',sans-serif;letter-spacing:.02em;flex:1}
+.ig{color:var(--ink);text-decoration:none;font-weight:600;font-size:13.5px;border:1px solid var(--line);border-radius:999px;padding:8px 14px;transition:border-color .2s,color .2s}
+.ig:hover{border-color:var(--brand);color:var(--brand)}
+.hero{padding:6px 0 26px}
+.tag{margin:0 0 10px;color:var(--brand);font-weight:700;font-size:15px}
+.hero h1{font-size:clamp(50px,14vw,96px);font-weight:800;font-style:italic;line-height:.92}
+.w{display:block;animation:up .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*.13s)}
+@keyframes up{from{opacity:0;transform:translateY(55%) skewY(4deg)}}
+.bar{display:block;height:6px;width:104px;margin:20px 0 18px;background:var(--brand);border-radius:6px;transform-origin:left;animation:grow .9s .55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{transform:scaleX(0)}}
+.lead{margin:0 0 22px;color:#c3ccc4;font-size:17px;max-width:42ch;animation:up .9s .5s both}
+.cta{width:auto;height:50px;padding:0 26px}
+.marq{overflow:hidden;margin:0 -14px;border-block:1px solid var(--line);background:rgba(255,255,255,.02);-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.track{display:flex;width:max-content;animation:marq 28s linear infinite}
+.track span{font:700 26px 'Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#cfd8d0;padding:12px 0;white-space:nowrap}
+.track span::after{content:"";display:inline-block;width:22px;height:8px;margin:0 26px;background:var(--brand);transform:skewX(-30deg);vertical-align:middle}
+@keyframes marq{to{transform:translateX(-50%)}}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);position:sticky;top:8px;z-index:5;margin:18px 0 14px;background:rgba(15,17,15,.88);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--line);padding:5px;border-radius:18px;box-shadow:0 8px 28px rgba(0,0,0,.55)}
+.ind{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/3);background:var(--brand);border-radius:13px;transition:transform .4s cubic-bezier(.3,1.25,.5,1)}
+.tabs[data-i="1"] .ind{transform:translateX(100%)}.tabs[data-i="2"] .ind{transform:translateX(200%)}
+.tabs button{position:relative;z-index:1;border:0;background:none;padding:12px;border-radius:13px;font:700 15px Figtree,sans-serif;color:var(--muted);cursor:pointer;transition:color .25s}
+.tabs button.on{color:var(--brand-ink)}
+.ig:focus-visible,.btn:focus-visible,.tabs button:focus-visible,.x:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+section.tab{display:none}section.tab.on{display:block;animation:swap .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes swap{from{opacity:0;transform:translateY(14px)}}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .6s,transform .6s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:14px}
+.card h2{font-size:30px;font-weight:700;margin-bottom:4px}
+.help{color:var(--muted);font-size:14px;margin:0 0 14px}
+.prog{height:6px;background:#1c211d;border-radius:6px;overflow:hidden;margin:-4px 0 16px}
+.prog i{display:block;height:100%;width:0;background:var(--brand);border-radius:6px;transition:width .5s cubic-bezier(.3,1,.4,1)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid .full{grid-column:1/-1}
+.grid>*,.ex>*,.add>*{min-width:0}
+canvas{max-width:100%}
+.ex input{width:100%}
+label.f{display:block;font-weight:700;font-size:14px;margin-bottom:5px}
+input[type=text],input[type=number],select{width:100%;height:50px;border:2px solid var(--line);border-radius:12px;padding:0 14px;font:500 16px Figtree,sans-serif;background:#0a0c0a;color:var(--ink);appearance:none;-webkit-appearance:none;transition:border-color .2s,box-shadow .2s}
+input::placeholder{color:#5d685f}
+select option,select optgroup{background:#111411;color:var(--ink)}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 22px,calc(100% - 15px) 22px;background-size:5px 5px;background-repeat:no-repeat;padding-right:36px}
+input:focus,select:focus{outline:0;border-color:var(--brand);box-shadow:0 0 0 4px var(--soft)}
+.q{padding:16px 0;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:0;padding-top:0}
+.q h3{font-family:Figtree,sans-serif;font-weight:700;font-size:17px;margin-bottom:10px}
+.opts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.opts.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.opt{display:block;cursor:pointer;position:relative}
+.opt input{position:absolute;opacity:0;top:0;right:0;bottom:0;left:0;width:100%;height:100%;margin:0;cursor:pointer}
+.box{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:100%;min-height:76px;padding:8px 2px;border:2px solid var(--line);border-radius:14px;text-align:center;background:var(--card2);transition:background .2s,border-color .2s,transform .2s}
+.e{font-size:26px;line-height:1.1;display:block}
+.t{font-size:11px;font-weight:700;line-height:1.15;overflow-wrap:anywhere;color:#c3ccc4}
+.opt input:checked+.box{border-color:var(--brand);background:var(--soft)}
+.opt input:checked+.box .e{animation:pop .45s cubic-bezier(.3,1.7,.5,1)}
+@keyframes pop{from{transform:scale(.5) rotate(-12deg)}}
+.opt input:checked+.box .t{color:#fff}
+.opt input:focus-visible+.box{box-shadow:0 0 0 3px var(--brand)}
+@media(hover:hover){.box:hover{border-color:var(--brand);transform:translateY(-3px)}}
+@media(min-width:600px){.opts{gap:10px}.e{font-size:34px}.t{font-size:13px}.box{min-height:92px}.card{padding:24px}}
+.btns{display:grid;gap:10px;margin-bottom:14px}
+@media(min-width:600px){.btns{grid-template-columns:2fr 1fr}}
+.btn{position:relative;overflow:hidden;border:0;border-radius:14px;height:54px;padding:0 20px;font:700 16px Figtree,sans-serif;cursor:pointer;background:var(--brand);color:var(--brand-ink);transition:transform .15s,box-shadow .25s}
+.btn:not(.alt)::after{content:"";position:absolute;top:0;right:0;bottom:0;left:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.4) 50%,transparent 65%);transform:translateX(-130%)}
+@media(hover:hover){.btn:not(.alt):hover{box-shadow:0 8px 26px rgba(34,197,94,.35)}.btn:not(.alt):hover::after{transform:translateX(130%);transition:transform .7s}}
+.btn.alt{background:transparent;color:var(--ink);border:2px solid var(--line);transition:border-color .2s,transform .15s}
+@media(hover:hover){.btn.alt:hover{border-color:var(--brand)}}
+.btn.sm{height:46px;font-size:15px}
+.btn:active{transform:scale(.97)}
+.erro{display:none;background:rgba(255,90,95,.12);border:1px solid rgba(255,90,95,.35);color:#ffb3b5;border-radius:12px;padding:12px 14px;font-weight:700;margin-bottom:14px}
+#resultado{display:none}
+.score{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:14px 0}
+.ring{--p:0;--c:var(--brand);width:128px;height:128px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),#1f251f 0);display:grid;place-items:center;flex:none;transition:--p 1.3s cubic-bezier(.2,.8,.2,1)}
+.ring b{width:102px;height:102px;border-radius:50%;background:var(--card);display:grid;place-items:center;font:800 48px 'Barlow Condensed',sans-serif}
+.score h3{font-size:32px;font-weight:700}
+.score p{margin:6px 0 0;color:var(--muted);flex:1 1 220px}
+.alerta{background:rgba(240,140,0,.12);border:1px solid rgba(240,140,0,.35);color:#ffd9a0;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:15px}
+.chartbox{position:relative;height:320px;margin:8px 0 14px}
+@media(min-width:600px){.chartbox{height:400px}}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+@media(min-width:600px){.stats{grid-template-columns:repeat(3,1fr)}}
+.stat{background:var(--card2);border-radius:14px;padding:12px}
+.stat small{color:var(--muted);font-size:12.5px;display:block}
+.stat b{font:700 34px 'Barlow Condensed',sans-serif}
+.up{color:var(--ok)}.down{color:var(--bad)}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:14.5px;min-width:340px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:700;font-size:13px}
+ul.an{padding-left:20px;margin:8px 0}ul.an li{margin-bottom:8px}
+.note{font-size:13px;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:22px}
+footer a{color:var(--brand);text-decoration:none;font-weight:700}
+.prox{border:1px solid rgba(34,197,94,.45);background:radial-gradient(120% 140% at 100% 0%,rgba(34,197,94,.18),transparent 60%),#000;color:#fff;border-radius:16px;padding:14px 16px;margin:16px 0}
+.prox small{color:var(--muted);display:block}
+.prox b{font:700 32px 'Barlow Condensed',sans-serif;display:block}
+.prox span{font-size:14px;color:#c3ccc4}
+.sub{font-size:24px;font-weight:700;margin:14px 0 6px}
+.ex{display:grid;grid-template-columns:64px auto 1fr 42px;gap:6px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.ex input{height:42px;padding:0 8px;text-align:center;font-size:15px}
+.exn{grid-column:1/-1;font-weight:700}
+.exn small{display:block;color:var(--muted);font-size:12px;font-weight:500}
+.x{border:0;background:rgba(255,90,95,.14);color:#ff9b9e;border-radius:10px;height:42px;font-size:15px;cursor:pointer}
+.add{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:12px}
+@media(min-width:600px){.ex{grid-template-columns:1fr 64px auto 120px 42px}.exn{grid-column:auto}}
+@media print{:root{color-scheme:light;--bg:#fff;--card:#fff;--card2:#fff;--ink:#000;--muted:#444;--line:#ccc}body::before{display:none}header,.tabs,.no-print,footer{display:none!important}body{background:#fff;color:#000}.rv{opacity:1;transform:none}.card{border:1px solid #ccc;break-inside:avoid}input,select{background:#fff!important;color:#000!important}.ex input{border:0}.x,.add{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+
+:root{--d:2.5s}html.seen{--d:0s}
+body::before{animation:none;top:0;right:0;bottom:0;left:0;background:radial-gradient(70% 38% at 50% 0%,rgba(34,197,94,.13),transparent)}
+.splash{pointer-events:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:100;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;animation:out .9s 2.5s cubic-bezier(.7,0,.2,1) forwards}
+.splash svg{width:112px;height:112px}
+.splash p{margin:0;font:700 20px 'Barlow Condensed',sans-serif;letter-spacing:.42em;text-indent:.42em;color:#e8efe9;animation:rise .8s 1.2s both}
+html.seen .splash{display:none}
+@keyframes out{to{transform:translateY(-100%);visibility:hidden}}
+.dr{stroke-dasharray:1;animation:draw 1.3s cubic-bezier(.6,0,.2,1) both}
+.splash .dr{animation-delay:.2s}.hero .dr{animation-delay:var(--d)}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes rise{from{opacity:0;transform:translateY(70%)}}
+.hero{padding:4px 0 30px}
+.lock{display:flex;align-items:center;gap:clamp(12px,4vw,24px)}
+.mark{width:clamp(70px,20vw,112px);flex:none}
+.hero h1{font-weight:800;font-style:normal;text-transform:uppercase;font-size:clamp(50px,15.5vw,108px);line-height:.88;letter-spacing:.015em;color:#fff}
+.row{display:block;overflow:hidden;padding-bottom:.04em}.row.g{color:var(--brand)}
+.l{display:inline-block;animation:rise .85s calc(var(--d) + var(--i)*.05s) cubic-bezier(.2,.8,.2,1) both}
+.trend{display:block;width:100%;height:auto;margin:22px 0 14px;overflow:visible}
+.tl{animation-duration:1.9s;animation-delay:calc(var(--d) + .7s)}
+.dot{animation:rise .4s calc(var(--d) + 2.5s) both}
+.pg{transform-box:fill-box;transform-origin:center;animation:ping 2s calc(var(--d) + 2.8s) ease-out infinite}
+@keyframes ping{from{transform:scale(1);opacity:.55}to{transform:scale(3.4);opacity:0}}
+.sub2{margin:0 0 8px;font-weight:700;font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);animation:rise .8s calc(var(--d) + .6s) both}
+.hero .lead{animation:rise .8s calc(var(--d) + .8s) both}
+.hero .cta{animation:rise .8s calc(var(--d) + 1s) both}
+@media(prefers-reduced-motion:reduce){.splash{display:none}}
+button,.btn,.opt{touch-action:manipulation;-webkit-appearance:none;appearance:none}
+.tabs{-webkit-transform:translateZ(0)}
+</style>
+<script>
+function aba(id){
+  var a=document.querySelectorAll('.tabs button,section.tab');
+  for(var i=0;i<a.length;i++)a[i].classList.remove('on');
+  document.getElementById('b-'+id).classList.add('on');
+  document.getElementById(id).classList.add('on');
+  try{if(id==='evolucao'&&window.evolucao)evolucao();if(id==='treinos'&&window.iniTreino)iniTreino();if(id==='avaliar'&&window.refazRadar)refazRadar();}catch(e){mostraErro(e.message)}
+  window.scrollTo(0,0);
+}
+function mostraErro(m){
+  var d=document.getElementById('jsErro');
+  if(!d){d=document.createElement('div');d.id='jsErro';d.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:99;background:#9b1c22;color:#fff;padding:12px;border-radius:12px;font:14px sans-serif';document.body.appendChild(d)}
+  d.textContent='Erro no site: '+m;
+}
+window.onerror=function(m,u,l){mostraErro(m+' (linha '+l+')')};
+</script>
+</head>
+<body>
+<div class="splash" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="#22c55e" aria-hidden="true"><rect class="dr" x="2" y="2" width="44" height="44" rx="11" stroke-width="2.5" pathLength="1"/><path class="dr" d="M33 14H18v20h15M18 24h11" stroke-width="4.5" stroke-linecap="square" pathLength="1"/></svg><p>EMERSON TRAINING</p></div>
+<script>try{if(sessionStorage.getItem("ets"))document.documentElement.classList.add("seen");else sessionStorage.setItem("ets","1")}catch(e){}setTimeout(function(){var x=document.querySelector(".splash");if(x&&x.parentNode)x.parentNode.removeChild(x)},3700)</script>
+<div class="wrap">
+<header>
+  <div class="top"><svg class="logo" viewBox="0 0 48 48" role="img" aria-label="Logo Emerson Training"><rect width="48" height="48" rx="12" fill="#22c55e"/><path fill="#05100a" d="M16 11h18a3 3 0 010 6H19v4h11a3 3 0 010 6H19v4h15a3 3 0 010 6H16a3 3 0 01-3-3V14a3 3 0 013-3z"/></svg><span class="brand">Emerson Training</span><a class="ig" href="https://www.instagram.com/emersontraining_/" target="_blank" rel="noopener">@emersontraining_</a></div>
+  <div class="hero">
+    <div class="lock">
+      <div class="mark"><svg viewBox="0 0 48 48" fill="none" stroke="#22c55e" aria-hidden="true"><rect class="dr" x="2" y="2" width="44" height="44" rx="11" stroke-width="2.5" pathLength="1"/><path class="dr" d="M33 14H18v20h15M18 24h11" stroke-width="4.5" stroke-linecap="square" pathLength="1"/></svg></div>
+      <h1 aria-label="Emerson Training"><span class="row" aria-hidden="true"><span class="l" style="--i:0">E</span><span class="l" style="--i:1">M</span><span class="l" style="--i:2">E</span><span class="l" style="--i:3">R</span><span class="l" style="--i:4">S</span><span class="l" style="--i:5">O</span><span class="l" style="--i:6">N</span></span><span class="row g" aria-hidden="true"><span class="l" style="--i:7">T</span><span class="l" style="--i:8">R</span><span class="l" style="--i:9">A</span><span class="l" style="--i:10">I</span><span class="l" style="--i:11">N</span><span class="l" style="--i:12">I</span><span class="l" style="--i:13">N</span><span class="l" style="--i:14">G</span></span></h1>
+    </div>
+    <svg class="trend" viewBox="0 0 400 80" fill="none" aria-hidden="true"><path class="dr tl" d="M0 68C40 62 62 72 100 56S160 52 192 40S250 46 282 28S350 22 396 10" stroke="#22c55e" stroke-width="3" stroke-linecap="round" pathLength="1"/><g class="dot"><circle class="pg" cx="396" cy="10" r="6" fill="#22c55e"/><circle cx="396" cy="10" r="6" fill="#22c55e"/></g></svg>
+    <p class="sub2">Coach de Educação Física</p>
+    <p class="lead">Avaliação de treinamento: veja como o aluno está hoje e acompanhe a evolução ao longo do mês.</p>
+    <button class="btn cta" onclick="document.querySelector('.tabs').scrollIntoView({behavior:'smooth'})">Começar avaliação</button>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" data-i="0"><span class="ind"></span>
+  <button class="on" id="b-avaliar" onclick="aba('avaliar')" role="tab">Avaliar</button>
+  <button id="b-evolucao" onclick="aba('evolucao')" role="tab">Evolução</button>
+  <button id="b-treinos" onclick="aba('treinos')" role="tab">Treinos</button>
+</nav>
+
+<section class="tab on" id="avaliar">
+  <div class="card">
+    <h2>Dados do aluno</h2>
+    <p class="help">O nome identifica o aluno no histórico.</p>
+    <div class="grid">
+      <div class="full"><label class="f" for="nome">Nome</label><input id="nome" type="text" list="alunos" placeholder="Nome do aluno" autocomplete="off"><datalist id="alunos"></datalist></div>
+      <div><label class="f" for="idade">Idade</label><input id="idade" type="number" inputmode="numeric" min="1" placeholder="25"></div>
+      <div><label class="f" for="peso">Peso (kg)</label><input id="peso" type="number" inputmode="decimal" step="0.1" placeholder="75"></div>
+      <div><label class="f" for="altura">Altura (cm)</label><input id="altura" type="number" inputmode="numeric" placeholder="175"></div>
+      <div><label class="f" for="dias">Meta (dias/semana)</label><input id="dias" type="number" inputmode="numeric" min="0" max="7" placeholder="4"></div>
+      <div class="full"><label class="f" for="objetivo">Objetivo</label>
+        <select id="objetivo"><option>💪 Hipertrofia</option><option>🔥 Emagrecimento</option><option>🏃 Condicionamento físico</option><option>🏋️ Força</option><option>❤️ Saúde e qualidade de vida</option><option>🎯 Definição muscular</option><option>🔁 Resistência muscular</option></select></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Avaliação do dia</h2>
+    <p class="help" id="helpDia">Toque na carinha que melhor representa como o aluno está.</p>
+    <div class="q" id="qTreinou"><h3>🏃 O aluno treinou hoje?</h3>
+      <div class="opts two"><label class="opt"><input type="radio" name="treinou" value="1" checked><span class="box"><span class="e">💪</span><span class="t">Treinou / vai treinar</span></span></label><label class="opt"><input type="radio" name="treinou" value="0"><span class="box"><span class="e">😴</span><span class="t">Não treinou hoje</span></span></label></div>
+      <p class="note" id="ntInfo" style="display:none;margin:10px 0 0"></p></div>
+    <div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="6"><i id="progI"></i></div>
+    <div id="perguntas"><div class="q"><h3>Como você dormiu?</h3><div class="opts"><label class="opt"><input type="radio" name="sono" value="0"><span class="box"><span class="e">😫</span><span class="t">Muito mal</span></span></label><label class="opt"><input type="radio" name="sono" value="5"><span class="box"><span class="e">😞</span><span class="t">Mal</span></span></label><label class="opt"><input type="radio" name="sono" value="10"><span class="box"><span class="e">😐</span><span class="t">Regular</span></span></label><label class="opt"><input type="radio" name="sono" value="15"><span class="box"><span class="e">🙂</span><span class="t">Bem</span></span></label><label class="opt"><input type="radio" name="sono" value="20"><span class="box"><span class="e">😴</span><span class="t">Muito bem</span></span></label></div></div><div class="q"><h3>Como está sua disposição hoje?</h3><div class="opts"><label class="opt"><input type="radio" name="disposicao" value="0"><span class="box"><span class="e">🥱</span><span class="t">Muito baixa</span></span></label><label class="opt"><input type="radio" name="disposicao" value="5"><span class="box"><span class="e">😕</span><span class="t">Baixa</span></span></label><label class="opt"><input type="radio" name="disposicao" value="10"><span class="box"><span class="e">😐</span><span class="t">Normal</span></span></label><label class="opt"><input type="radio" name="disposicao" value="15"><span class="box"><span class="e">🙂</span><span class="t">Boa</span></span></label><label class="opt"><input type="radio" name="disposicao" value="20"><span class="box"><span class="e">🤩</span><span class="t">Excelente</span></span></label></div></div><div class="q"><h3>Como está seu nível de cansaço?</h3><div class="opts"><label class="opt"><input type="radio" name="cansaco" value="20"><span class="box"><span class="e">😎</span><span class="t">Muito baixo</span></span></label><label class="opt"><input type="radio" name="cansaco" value="15"><span class="box"><span class="e">🙂</span><span class="t">Baixo</span></span></label><label class="opt"><input type="radio" name="cansaco" value="10"><span class="box"><span class="e">😐</span><span class="t">Normal</span></span></label><label class="opt"><input type="radio" name="cansaco" value="5"><span class="box"><span class="e">😓</span><span class="t">Alto</span></span></label><label class="opt"><input type="radio" name="cansaco" value="0"><span class="box"><span class="e">🥵</span><span class="t">Muito alto</span></span></label></div></div><div class="q"><h3>Como foi seu último treino?</h3><div class="opts"><label class="opt"><input type="radio" name="ultimo" value="20"><span class="box"><span class="e">😎</span><span class="t">Muito fácil</span></span></label><label class="opt"><input type="radio" name="ultimo" value="15"><span class="box"><span class="e">🙂</span><span class="t">Fácil</span></span></label><label class="opt"><input type="radio" name="ultimo" value="10"><span class="box"><span class="e">😐</span><span class="t">Moderado</span></span></label><label class="opt"><input type="radio" name="ultimo" value="5"><span class="box"><span class="e">😓</span><span class="t">Difícil</span></span></label><label class="opt"><input type="radio" name="ultimo" value="0"><span class="box"><span class="e">🥵</span><span class="t">Muito difícil</span></span></label></div></div><div class="q"><h3>Como está sua recuperação?</h3><div class="opts"><label class="opt"><input type="radio" name="recuperacao" value="0"><span class="box"><span class="e">😫</span><span class="t">Muito ruim</span></span></label><label class="opt"><input type="radio" name="recuperacao" value="5"><span class="box"><span class="e">😞</span><span class="t">Ruim</span></span></label><label class="opt"><input type="radio" name="recuperacao" value="10"><span class="box"><span class="e">😐</span><span class="t">Regular</span></span></label><label class="opt"><input type="radio" name="recuperacao" value="15"><span class="box"><span class="e">🙂</span><span class="t">Boa</span></span></label><label class="opt"><input type="radio" name="recuperacao" value="20"><span class="box"><span class="e">😁</span><span class="t">Muito boa</span></span></label></div></div><div class="q"><h3>Está sentindo dor ou desconforto?</h3><div class="opts two"><label class="opt"><input type="radio" name="dor" value="0"><span class="box"><span class="e">😣</span><span class="t">Sim</span></span></label><label class="opt"><input type="radio" name="dor" value="10"><span class="box"><span class="e">😊</span><span class="t">Não</span></span></label></div></div></div>
+    <div class="grid">
+      <div id="boxHoras"><label class="f" for="horasSono">Horas dormidas</label><input id="horasSono" type="number" inputmode="decimal" min="0" max="24" step="0.5" placeholder="8"></div>
+      <div id="boxDias"><label class="f" for="diasSemana">Dias treinados na semana</label><input id="diasSemana" type="number" inputmode="numeric" min="0" max="7" placeholder="4"></div>
+    </div>
+    <p class="note" style="margin:12px 0 0">Os dias treinados, comparados com a meta do aluno, somam ou tiram pontos e aparecem no gráfico como frequência.</p>
+  </div>
+
+  <div class="erro" id="erro" role="alert"></div>
+  <div class="btns">
+    <button class="btn" onclick="calcular()">Calcular e salvar avaliação</button>
+    <button class="btn alt" onclick="limpar()">Limpar</button>
+  </div>
+
+  <div class="card" id="resultado">
+    <h2>Resultado</h2>
+    <div class="score">
+      <div class="ring" id="ring"><b id="pontuacao">0</b></div>
+      <div><h3 id="nivel"></h3><p id="recomendacao"></p></div>
+    </div>
+    <div id="alerta"></div>
+    <p class="note" id="ajustes"></p>
+    <div class="chartbox"><canvas id="radar"></canvas></div>
+    <button class="btn sm" onclick="baixar(radar,'avaliacao')">Baixar gráfico (PNG)</button>
+    <div id="melhorar"></div>
+    <p class="note" id="notaRes" style="margin-bottom:0"></p>
+  </div>
+
+  <div class="card">
+    <h2>Como interpretar</h2>
+    <div class="tw"><table>
+      <tr><th>Pontos</th><th>Nível</th><th>Significado</th></tr>
+      <tr><td>0–20</td><td>🔴 Recuperação</td><td>Priorizar recuperação e esforço baixo.</td></tr>
+      <tr><td>21–40</td><td>🟠 Baixo</td><td>Treino leve a moderado.</td></tr>
+      <tr><td>41–60</td><td>🟡 Moderado</td><td>Treino moderado.</td></tr>
+      <tr><td>61–80</td><td>🟢 Bom</td><td>Boa disponibilidade para treinar.</td></tr>
+      <tr><td>81–100</td><td>🔵 Alto</td><td>Maior disponibilidade, conforme o planejamento.</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section class="tab" id="evolucao">
+  <div class="card">
+    <h2>Evolução do aluno</h2>
+    <p class="help">Análise dos últimos 30 dias de avaliações.</p>
+    <label class="f" for="selAluno">Aluno</label>
+    <select id="selAluno" onchange="evolucao()"></select>
+  </div>
+  <div id="vazio" class="card" style="display:none"></div>
+  <div id="evo" style="display:none">
+    <div class="card">
+      <h2>Pontuação ao longo do tempo</h2>
+      <div class="stats" id="stats"></div>
+      <div class="chartbox"><canvas id="linha"></canvas></div>
+      <button class="btn sm" onclick="baixar(linha,'evolucao')">Baixar gráfico (PNG)</button>
+    </div>
+    <div class="card">
+      <h2>Análise do período</h2>
+      <p class="note" id="periodo"></p>
+      <ul class="an" id="texto"></ul>
+      <div class="tw"><table id="tab"></table></div>
+    </div>
+    <button class="btn alt sm" style="width:100%" onclick="apagar()">Apagar histórico deste aluno</button>
+  </div>
+</section>
+
+<section class="tab" id="treinos">
+  <div class="card no-print">
+    <h2>Montar treino</h2>
+    <p class="help">O nível sugerido vem da previsão do próximo treino do aluno. Você pode ajustar.</p>
+    <div class="grid">
+      <div class="full"><label class="f" for="tAluno">Aluno</label><select id="tAluno" onchange="carregaAluno()"></select></div>
+      <div><label class="f" for="tNivel">Nível</label><select id="tNivel"></select></div>
+      <div><label class="f" for="tDiv">Divisão</label><select id="tDiv"></select></div>
+      <div class="full"><label class="f" for="tObj">Objetivo</label><select id="tObj"></select></div>
+    </div>
+    <p class="note" id="tInfo"></p>
+    <button class="btn" style="width:100%" onclick="gerar()">Gerar treino</button>
+  </div>
+  <div id="tImpacto" class="no-print"></div>
+  <div id="tPlano"></div>
+  <div class="btns no-print" id="tAcoes" style="display:none">
+    <button class="btn" onclick="salvarT()">Salvar treino do aluno</button>
+    <button class="btn alt" onclick="window.print()">Imprimir / PDF</button>
+  </div>
+</section>
+
+<footer>Emerson Training, <a href="https://www.instagram.com/emersontraining_/" target="_blank" rel="noopener">@emersontraining_</a><br>Avaliação orientativa. Não substitui o acompanhamento do profissional.</footer>
+</div>
+
+<script>
+const Q=[
+ {k:'sono',n:'Sono',t:'😴 Como você dormiu?',m:20,o:[['😫','Muito mal',0],['😞','Mal',5],['😐','Regular',10],['🙂','Bem',15],['😴','Muito bem',20]]},
+ {k:'disposicao',n:'Disposição',t:'⚡ Como está sua disposição hoje?',m:20,o:[['🥱','Muito baixa',0],['😕','Baixa',5],['😐','Normal',10],['🙂','Boa',15],['🤩','Excelente',20]]},
+ {k:'cansaco',n:'Baixo cansaço',t:'😓 Como está seu nível de cansaço?',m:20,o:[['😎','Muito baixo',20],['🙂','Baixo',15],['😐','Normal',10],['😓','Alto',5],['🥵','Muito alto',0]]},
+ {k:'ultimo',n:'Último treino',t:'🏋️ Como foi seu último treino?',m:20,o:[['😎','Muito fácil',20],['🙂','Fácil',15],['😐','Moderado',10],['😓','Difícil',5],['🥵','Muito difícil',0]]},
+ {k:'recuperacao',n:'Recuperação',t:'🔄 Como está sua recuperação?',m:20,o:[['😫','Muito ruim',0],['😞','Ruim',5],['😐','Regular',10],['🙂','Boa',15],['😁','Muito boa',20]]},
+ {k:'dor',n:'Sem dor',t:'🩹 Está sentindo dor ou desconforto?',m:10,o:[['😣','Sim',0],['😊','Não',10]]}
+];
+/* Ajustes que mudam o gráfico (altere aqui para calibrar):
+   falta = pontos perdidos por dia sem treino; freqMin/freqMax = limites do ajuste por frequência semanal;
+   carga = efeito máximo (±) da carga do treino do personal na previsão do próximo treino. */
+const AJ={falta:10,freqMin:-15,freqMax:10,carga:10};
+const $=id=>document.getElementById(id);
+if(typeof Chart==='undefined'){window.Chart=function(){this.destroy=()=>{};this.toBase64Image=()=>'';
+  document.querySelectorAll('.chartbox').forEach(b=>b.innerHTML='<p class="note">Gráfico indisponível: sem internet para carregar a biblioteca. Conecte-se e recarregue a página.</p>')}}
+let radar,linha,ultRes=null;
+if(Chart.defaults){Chart.defaults.color='#aab5ab';Chart.defaults.borderColor='rgba(255,255,255,.08)';Chart.defaults.font.family='Figtree,system-ui,sans-serif'}
+
+function getDB(){try{return JSON.parse(localStorage.getItem('avaliacoes')||'[]')}catch(e){return []}}
+function setDB(d){try{localStorage.setItem('avaliacoes',JSON.stringify(d))}catch(e){}}
+function radio(n){const e=document.querySelector(`input[name="${n}"]:checked`);return e?Number(e.value):null}
+function nomes(){return [...new Set(getDB().map(x=>x.nome))].sort()}
+function atualizaNomes(){$('alunos').innerHTML=nomes().map(n=>`<option value="${n}">`).join('')}
+atualizaNomes();
+
+function nivel(p){
+  if(p<=20)return{n:'🔴 Recuperação',c:'#ff5a5f',r:'Priorize a recuperação. Considere um treino de esforço baixo e acompanhe a resposta do aluno.'};
+  if(p<=40)return{n:'🟠 Baixo',c:'#f08c00',r:'Sugestão de esforço leve a moderado, observando a resposta durante o treino.'};
+  if(p<=60)return{n:'🟡 Moderado',c:'#d4a300',r:'Sugestão de treinamento moderado, de acordo com o planejamento do personal.'};
+  if(p<=80)return{n:'🟢 Bom',c:'#22c55e',r:'Boa disponibilidade para treinar, respeitando o planejamento individual.'};
+  return{n:'🔵 Alto',c:'#22d3ee',r:'Boa disponibilidade agora, mas o esforço continua sendo definido pelo planejamento e pela resposta ao treino.'};
+}
+
+function erro(m){const e=$('erro');e.textContent=m;e.style.display='block';e.scrollIntoView({behavior:'smooth',block:'center'})}
+
+function alternaTreino(){
+  const nt=radio('treinou')===0;
+  $('perguntas').style.display=nt?'none':'';
+  document.querySelector('.prog').style.display=nt?'none':'';
+  $('boxHoras').style.display=nt?'none':'';
+  $('boxDias').classList.toggle('full',nt);
+  $('ntInfo').style.display=nt?'block':'none';
+  $('ntInfo').textContent='Sem questionário: este dia entra no gráfico como falta e tira '+AJ.falta+' pts da pontuação.';
+  $('helpDia').textContent=nt?'O questionário foi descartado para este dia.':'Toque na carinha que melhor representa como o aluno está.';
+}
+document.addEventListener('change',e=>{if(e.target&&e.target.name==='treinou')alternaTreino()});
+alternaTreino();
+
+function calcular(){
+  $('erro').style.display='none';
+  const nome=$('nome').value.trim();
+  if(!nome){erro('Informe o nome do aluno.');return}
+  const nt=radio('treinou')===0;
+  const dv=$('diasSemana').value.trim();
+  const dias=dv===''?null:Math.max(0,Math.min(7,Math.round(Number(dv))||0));
+  const meta=Number($('dias').value)||null;
+  const H0=hist(nome),ult=H0.length?H0[H0.length-1]:null;
+  const aj=[];let r=null,horas=0,p;
+  if(nt){
+    p=(ult?ult.pontos:50)-AJ.falta;aj.push(['Dia sem treino',-AJ.falta]);
+    const fa=freqAdj(dias,meta);if(fa<0){p+=fa;aj.push(['Frequência abaixo da meta',fa])}
+  }else{
+    r={};
+    for(const q of Q){r[q.k]=radio(q.k);if(r[q.k]===null){erro('Responda todas as perguntas: falta "'+q.n+'" (ou marque "Não treinou hoje").');return}}
+    horas=Number($('horasSono').value)||0;
+    p=Object.values(r).reduce((a,b)=>a+b,0);
+    if(horas>=6&&horas<8){p-=3;aj.push(['Sono',-3])}else if(horas>0&&horas<6){p-=7;aj.push(['Sono',-7])}
+    const fa=freqAdj(dias,meta);if(fa!==0)aj.push(['Frequência semanal',fa]);p+=fa;
+  }
+  p=Math.max(0,Math.min(100,Math.round(p)));
+  const lv=nivel(p),pl=planoAtivo(nome),carga=cargaPlano(pl);
+
+  $('pontuacao').textContent=p;
+  $('ring').style.setProperty('--p',p);$('ring').style.setProperty('--c',nt?'#ff5a5f':lv.c);
+  $('nivel').textContent=nt?'😴 Dia sem treino':lv.n;
+  $('recomendacao').textContent=nt?'O questionário foi descartado. Este dia entra no gráfico como falta e reduz a pontuação.':lv.r;
+  $('alerta').innerHTML=nt?'<div class="alerta">😴 <b>Dia sem treino registrado.</b> Retome o treino assim que possível: faltas seguidas continuam derrubando a pontuação.</div>'
+    :(r.dor===0?'<div class="alerta">⚠️ <b>Atenção:</b> o aluno informou dor ou desconforto. Não use a pontuação como autorização para aumentar o esforço; considere avaliação profissional.</div>'
+    :(horas>0&&horas<6?'<div class="alerta">😴 <b>Atenção:</b> menos de 6 horas de sono. Considere reduzir a intensidade.</div>':''));
+  $('ajustes').textContent=aj.length?'Ajustes na pontuação: '+aj.map(a=>a[0]+' '+(a[1]>0?'+':'')+a[1]).join(' · ')+'.':'';
+
+  const d=getDB();
+  d.push({nome,data:new Date().toISOString(),pontos:p,r,nt,horas,dias,meta,peso:Number($('peso').value)||null,objetivo:$('objetivo').value,carga,sessoes:pl.length||null});
+  setDB(d);atualizaNomes();
+  alvo=nome;ultRes={nome,p};
+  $('resultado').style.display='block';
+  desenhaRadar();
+  $('resultado').scrollIntoView({behavior:'smooth'});
+}
+
+const bg={id:'bg',beforeDraw(c){const x=c.ctx;x.save();x.globalCompositeOperation='destination-over';x.fillStyle='#0b0d0b';x.fillRect(0,0,c.width,c.height);x.restore()}};
+
+function baixar(ch,nome){
+  const img=ch&&ch.toBase64Image&&ch.toBase64Image('image/png',1);
+  if(!img||img.length<30){alert('O gráfico ainda não está disponível.');return}
+  const arq=`${nome}-${($('nome').value||$('selAluno').value||'aluno').trim().replace(/\s+/g,'-')}.png`;
+  fetch(img).then(r=>r.blob()).then(b=>{
+    const f=new File([b],arq,{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[f]}))return navigator.share({files:[f],title:arq}).catch(()=>{});
+    const u=URL.createObjectURL(b),a=document.createElement('a');
+    a.href=u;a.download=arq;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(u),4000);
+  }).catch(()=>window.open(img,'_blank'));
+}
+
+function limpar(){
+  document.querySelectorAll('#avaliar input').forEach(i=>{if(i.type==='radio')i.checked=false;else i.value=''});
+  const sim=document.querySelector('input[name="treinou"][value="1"]');if(sim)sim.checked=true;
+  alternaTreino();
+  $('objetivo').selectedIndex=0;$('resultado').style.display='none';$('erro').style.display='none';ultRes=null;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- PREVISÃO, FALTAS, FREQUÊNCIA E CARGA DO TREINO ---------- */
+const TIPS={
+ sono:'Fixe o horário de dormir, evite telas 1 h antes e busque 7–9 h de sono.',
+ disposicao:'Reduza o volume da sessão e cuide da alimentação e da hidratação antes do treino.',
+ cansaco:'Use pausas maiores entre as séries e inclua um dia de descanso ativo na semana.',
+ ultimo:'O último treino pesou demais: reduza carga ou volume até o esforço ficar moderado.',
+ recuperacao:'Faça alongamento e liberação miofascial, hidrate-se, consuma proteína e deixe 48 h antes de repetir o mesmo músculo.',
+ dor:'Evite exercícios que causem dor e encaminhe o aluno para avaliação profissional.',
+ freq:'Marque dias fixos na semana para treinar e comece com sessões curtas até chegar à meta de dias.',
+ falta:'Dias sem treino derrubam a pontuação. Retome com um treino leve e mantenha a constância.'};
+const QF={k:'freq',n:'Frequência semanal',m:100};
+const hist=n=>getDB().filter(x=>x.nome===n).sort((a,b)=>a.data.localeCompare(b.data));
+const ultimaAval=H=>{for(let i=H.length-1;i>=0;i--)if(!H[i].nt)return H[i];return null};
+const freqPct=e=>{if(e.dias===null||e.dias===undefined)return null;const m=e.meta>0?e.meta:3;return Math.min(100,Math.round(e.dias/m*100))};
+const freqAdj=(dias,meta)=>{if(dias===null||dias===undefined)return 0;const m=meta>0?meta:3;return Math.max(AJ.freqMin,Math.min(AJ.freqMax,Math.round((Math.min(dias/m,1.2)-.8)*25)))};
+const pct=(e,q)=>q.k==='freq'?freqPct(e):(e.r?Math.round(e.r[q.k]/q.m*100):null);
+const fracos=H=>{
+  const u=H[H.length-1],ua=ultimaAval(H),a=ua?Q.map(q=>({q,v:pct(ua,q)})):[],f=freqPct(u);
+  if(f!==null)a.push({q:QF,v:f});
+  return a.filter(x=>x.v!==null&&x.v<=50).sort((a,b)=>a.v-b.v).slice(0,3);
+};
+const nivelIdx=p=>p<=20?0:p<=40?1:p<=60?2:p<=80?3:4;
+const RPE=p=>p<=20?'3–4':p<=40?'5–6':p<=60?'6–7':p<=80?'7–8':'8–9';
+const zona={id:'zona',beforeDatasetsDraw(c){const y=c.scales.y,a=c.chartArea,x=c.ctx,t=y.getPixelForValue(50),b=y.getPixelForValue(0);
+  x.save();x.fillStyle='rgba(229,72,77,.09)';x.fillRect(a.left,t,a.right-a.left,b-t);
+  x.fillStyle='#ff8a8e';x.font='600 11px Figtree,sans-serif';x.fillText('Zona para melhorar (abaixo de 50)',a.left+6,t+14);x.restore()}};
+
+/* carga do treino do personal: volume semanal em séries (cardio conta 3, mobilidade 0,5); 100 = 100 séries ou mais */
+const volume=pl=>{let v=0;(pl||[]).forEach(d=>d.ex.forEach(e=>{const g=grupoDe(e.n),s=Number(e.s)||0;v+=g==='Cardio'?3:g==='Mobilidade'?s*.5:s}));return v};
+const cargaPlano=pl=>{if(!pl||!pl.length)return null;const v=volume(pl);return v>0?Math.min(100,Math.round(v)):null};
+const ajCarga=c=>Math.round(AJ.carga*(50-c)/50);
+const planoAtivo=n=>{const t=getT()[n];return Array.isArray(t)?t:[]};
+
+function projecao(H,semPlano){
+  const n=H.length,u=H[n-1],k=Math.max(0,n-3),ua=ultimaAval(H);
+  let p=u.pontos+(n>1?(u.pontos-H[k].pontos)/(n-1-k)*.5:0);
+  if(!semPlano){const c=cargaPlano(planoAtivo(u.nome));if(c!==null)p+=ajCarga(c)}
+  p=Math.max(0,Math.min(100,p));
+  const rec=ua&&(new Date(u.data)-new Date(ua.data))<=7*864e5;
+  if(rec&&ua.r.dor===0)p=Math.min(p,60);
+  if(rec&&ua.horas>0&&ua.horas<6)p=Math.min(p,70);
+  p=Math.round(p);return{p,lv:nivel(p)};
+}
+
+function montaDados(H,o){
+  o=o||{};
+  const u=H[H.length-1],pr=o.pr!==undefined?o.pr:projecao(H).p,cores=['#ff5a5f','#c084fc','#f472b6'];
+  const ds=[
+    {label:'Pontuação',data:[...H.map(x=>x.pontos),null],borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,.14)',fill:true,tension:.3,borderWidth:3,
+      pointRadius:[...H.map(x=>x.nt?8:6),6],pointStyle:[...H.map(x=>x.nt?'crossRot':'circle'),'circle'],
+      pointBackgroundColor:[...H.map(x=>x.nt?'#ff5a5f':nivel(x.pontos).c),'#0b0d0b'],
+      pointBorderColor:[...H.map(x=>x.nt?'#ff5a5f':'#0b0d0b'),'#0b0d0b'],pointBorderWidth:[...H.map(x=>x.nt?3:2),2]},
+    {label:'Previsão próximo treino',data:[...H.map((x,i)=>i===H.length-1?x.pontos:null),pr],borderColor:'#f2f5f2',borderDash:[6,5],borderWidth:2.5,pointRadius:[...H.map(()=>0),7],pointStyle:'rectRot',pointBackgroundColor:'#f2f5f2'}
+  ];
+  const fq=H.map(freqPct);
+  if(fq.some(v=>v!==null))ds.push({label:'Frequência (% da meta)',data:[...fq,null],borderColor:'#22d3ee',borderDash:[2,4],borderWidth:2,pointRadius:3,pointBackgroundColor:'#22d3ee',tension:.3,spanGaps:true});
+  const cp=cargaPlano(planoAtivo(u.nome)),cg=H.map(x=>x.carga!=null?x.carga:null);
+  if(cp!==null||cg.some(v=>v!==null))ds.push({label:'Carga do treino (personal)',data:[...cg,cp],borderColor:'#f5a524',borderWidth:2,pointRadius:[...cg.map(()=>3),6],pointStyle:'rect',pointBackgroundColor:'#f5a524',tension:.2,spanGaps:true});
+  if(o.fracos!==false)fracos(H).filter(f=>f.q.k!=='freq').forEach((f,i)=>ds.push({label:f.q.n+' (melhorar)',data:[...H.map(x=>pct(x,f.q)),null],borderColor:cores[i],borderDash:[3,4],borderWidth:2,pointRadius:3,tension:.3,pointBackgroundColor:cores[i],spanGaps:true}));
+  return{labels:[...H.map(x=>fd(x.data)),'Próximo'],datasets:ds};
+}
+
+function opcoes(titulo,H){
+  return{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}},title:{display:true,text:titulo,font:{size:15,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>{const e=H[c.dataIndex];return(c.datasetIndex===0&&e&&e.nt)?'😴 Dia sem treino: '+c.formattedValue:c.dataset.label+': '+c.formattedValue}}}},
+    scales:{y:{min:0,max:100,ticks:{stepSize:20},title:{display:true,text:'Pontuação / %'}}}};
+}
+
+function desenhaRadar(){
+  if(!ultRes)return;
+  const nome=ultRes.nome,p=ultRes.p,H=hist(nome).slice(-12);
+  $('notaRes').textContent=H.length<2?'Avaliação salva. O gráfico de linhas ganha forma a partir da segunda avaliação deste aluno.':`Avaliação salva. Gráfico com os últimos ${H.length} registros de ${nome}.`;
+  renderMelhorar(H);
+  if(radar)radar.destroy();
+  radar=new Chart($('radar'),{type:'line',data:montaDados(H),options:opcoes([nome,`pontuação por avaliação (hoje: ${p}/100)`],H),plugins:[bg,zona]});
+}
+function refazRadar(){if(ultRes&&$('resultado').style.display==='block')desenhaRadar()}
+
+let alvo='';
+function renderMelhorar(H){
+  const u=H[H.length-1],pr=projecao(H),fr=fracos(H),c=cargaPlano(planoAtivo(u.nome));
+  const tx=(H.length<2?'Estimativa baseada só nesta avaliação':'Considera a tendência dos últimos registros')+(c!==null?` e a carga do treino do personal (${c}%, ${sinal(ajCarga(c))} pts)`:'')+'.';
+  const extra=u.nt?`<li><b>Dia sem treino:</b> ${TIPS.falta}</li>`:'';
+  $('melhorar').innerHTML=`<div class="prox"><small>Previsão para o próximo treino</small><b>${pr.p} pts — ${pr.lv.n}</b><span>Esforço sugerido: RPE ${RPE(pr.p)} (escala de 1 a 10). ${tx}</span></div>
+  <h3 class="sub">O que precisa melhorar</h3>`+
+  ((fr.length||extra)?`<ul class="an">${extra}${fr.map(f=>`<li><b>${f.q.n}</b> (${f.v}%): ${TIPS[f.q.k]}</li>`).join('')}</ul>`:'<p class="note">Nenhum item abaixo de 50%. Mantenha a rotina atual.</p>')+
+  `<button class="btn sm" onclick="irTreino()">Montar treino para este aluno</button>`;
+}
+function irTreino(){aba('treinos')}
+
+/* ---------- TREINOS ---------- */
+const EX={
+ 'Peito':['Supino reto com barra','Supino inclinado com halteres','Crucifixo com halteres','Supino máquina (chest press)','Crossover na polia alta','Supino reto com halteres','Supino inclinado com barra','Supino declinado','Crucifixo na máquina (peck deck)','Crossover na polia baixa','Pullover com halter','Flexão de braço'],
+ 'Costas':['Puxada frontal','Remada baixa','Remada curvada com barra','Remada unilateral (serrote)','Puxada supinada','Puxada com triângulo','Remada na máquina','Remada cavalinho','Barra fixa','Pulldown na polia (braços estendidos)','Levantamento terra','Extensão lombar (banco romano)'],
+ 'Ombros':['Desenvolvimento com halteres','Elevação lateral','Crucifixo inverso (deltoide posterior)','Desenvolvimento na máquina','Elevação frontal','Elevação lateral na polia','Desenvolvimento militar com barra','Face pull','Remada alta','Encolhimento com halteres (trapézio)','Encolhimento com barra (trapézio)'],
+ 'Bíceps':['Rosca direta com barra','Rosca alternada com halteres','Rosca martelo','Rosca Scott','Rosca concentrada','Rosca na polia baixa','Rosca inclinada com halteres'],
+ 'Tríceps':['Tríceps pulley (corda)','Tríceps testa','Tríceps francês','Tríceps pulley (barra)','Mergulho nas paralelas','Mergulho entre bancos','Tríceps coice','Supino fechado'],
+ 'Antebraço':['Rosca punho','Rosca punho inversa','Rosca inversa','Caminhada do fazendeiro (farmer walk)'],
+ 'Quadríceps':['Agachamento livre','Leg press 45°','Cadeira extensora','Agachamento no Smith','Agachamento hack','Afundo (avanço)','Agachamento búlgaro','Passada (caminhada)','Agachamento goblet','Step-up no banco'],
+ 'Posterior de coxa':['Mesa flexora','Stiff com barra','Cadeira flexora','Stiff com halteres','Levantamento terra romeno','Flexora em pé (unilateral)','Good morning'],
+ 'Glúteos':['Elevação pélvica','Cadeira abdutora','Glúteo na polia (coice)','Agachamento sumô','Glúteo na máquina','Cadeira adutora','Abdução de quadril na polia'],
+ 'Panturrilha':['Panturrilha em pé','Panturrilha sentado','Panturrilha no leg press','Panturrilha no Smith'],
+ 'Abdômen':['Abdominal supra (crunch)','Prancha','Elevação de pernas','Abdominal infra','Prancha lateral','Abdominal na polia','Abdominal na máquina','Roda abdominal','Abdominal oblíquo (bicicleta)','Russian twist'],
+ 'Cardio':['Esteira (caminhada ou corrida)','Bicicleta ergométrica','Elíptico','Escada (stair climber)','Remo ergométrico','Bike spinning','Tiros na esteira (HIIT)','Pular corda'],
+ 'Mobilidade':['Mobilidade de quadril','Mobilidade de ombros','Mobilidade de coluna torácica','Liberação miofascial com rolo','Caminhada leve','Alongamento de membros inferiores','Alongamento de membros superiores']};
+const grupoDe=n=>Object.keys(EX).find(g=>EX[g].indexOf(n)>=0)||null;
+const DIV={
+ 'Full body (1 treino)':[['Quadríceps','Peito','Costas','Ombros','Posterior de coxa','Abdômen']],
+ 'Superior / Inferior (2 treinos)':[['Peito','Costas','Ombros','Bíceps','Tríceps'],['Quadríceps','Posterior de coxa','Glúteos','Panturrilha','Abdômen']],
+ 'AB (2 treinos)':[['Peito','Ombros','Bíceps','Tríceps'],['Quadríceps','Posterior de coxa','Costas','Abdômen']],
+ 'ABC (3 treinos)':[['Peito','Tríceps'],['Costas','Bíceps'],['Quadríceps','Posterior de coxa','Ombros']],
+ 'Push / Pull / Legs (3 treinos)':[['Peito','Ombros','Tríceps'],['Costas','Bíceps','Antebraço'],['Quadríceps','Posterior de coxa','Glúteos','Panturrilha']],
+ 'ABCD (4 treinos)':[['Peito','Tríceps'],['Costas','Bíceps'],['Quadríceps','Posterior de coxa','Panturrilha'],['Ombros','Abdômen']],
+ 'ABCDE (5 treinos)':[['Peito'],['Costas'],['Ombros','Abdômen'],['Bíceps','Tríceps','Antebraço'],['Quadríceps','Posterior de coxa','Glúteos','Panturrilha']],
+ 'Foco em glúteos e pernas (2 treinos)':[['Quadríceps','Glúteos','Panturrilha'],['Posterior de coxa','Glúteos','Abdômen']],
+ 'Cardio e core (1 treino)':[['Cardio','Abdômen']]};
+const DIV_DIAS={1:'Full body (1 treino)',2:'Superior / Inferior (2 treinos)',3:'ABC (3 treinos)',4:'ABCD (4 treinos)',5:'ABCDE (5 treinos)'};
+const OBJ={'Hipertrofia':['8–12','60–90 s'],'Emagrecimento':['12–15','30–45 s'],'Condicionamento físico':['15–20','30–45 s'],'Força':['4–6','2–3 min'],'Saúde e qualidade de vida':['10–12','60 s'],'Definição muscular':['12–15','45 s'],'Resistência muscular':['15–20','30–45 s']};
+const NIV=['🔴 Recuperação','🟠 Baixo','🟡 Moderado','🟢 Bom','🔵 Alto'];
+let plano=[];
+const getT=()=>{try{return JSON.parse(localStorage.getItem('treinos')||'{}')}catch(e){return {}}};
+function gravaPlano(){
+  const n=$('tAluno').value;if(!n)return;
+  const t=getT();t[n]=plano;
+  try{localStorage.setItem('treinos',JSON.stringify(t))}catch(e){}
+}
+const padrao=()=>{const n=+$('tNivel').value,ob=OBJ[$('tObj').value]||OBJ['Hipertrofia'];return{s:[2,2,3,4,4][n],r:n<=1?'12–15':ob[0],d:ob[1]}};
+const exItem=(x,m,p)=>m==='Cardio'?{n:x,s:1,r:'15–30 min',d:'—'}:m==='Mobilidade'?{n:x,s:2,r:'30–60 s',d:'30 s'}
+  :{n:x,s:p.s,r:m==='Abdômen'?(/Prancha/.test(x)?'20–40 s':'15–20'):p.r,d:p.d};
+
+function iniTreino(){
+  const ns=nomes(),s=$('tAluno'),at=alvo||s.value,prim=!$('tNivel').options.length;
+  s.innerHTML=ns.length?ns.map(n=>`<option>${n}</option>`).join(''):'<option value="">Nenhum aluno avaliado</option>';
+  if(ns.includes(at))s.value=at;
+  if(prim){
+    $('tNivel').innerHTML=NIV.map((n,i)=>`<option value="${i}">${n}</option>`).join('');
+    $('tDiv').innerHTML=Object.keys(DIV).map(d=>`<option>${d}</option>`).join('');
+    $('tObj').innerHTML=Object.keys(OBJ).map(d=>`<option>${d}</option>`).join('');
+  }
+  if(prim||alvo){alvo='';carregaAluno()}
+}
+
+function carregaAluno(){
+  const n=$('tAluno').value,H=hist(n);
+  if(!H.length){$('tInfo').textContent='Faça uma avaliação deste aluno para receber um nível sugerido.';plano=planoAtivo(n);desenha();return}
+  const pr=projecao(H,true),u=H[H.length-1],o=(u.objetivo||'').replace(/^\S+\s/,'');
+  $('tNivel').value=nivelIdx(pr.p);
+  if(OBJ[o])$('tObj').value=o;
+  const mt=u.meta>0?Math.min(5,Math.round(u.meta)):0;
+  if(mt&&DIV_DIAS[mt])$('tDiv').value=DIV_DIAS[mt];
+  $('tInfo').textContent=`Última avaliação: ${u.pontos} pts${u.nt?' (dia sem treino)':''}. Previsão base do próximo treino: ${pr.p} pts (${pr.lv.n}).`+(mt?` Divisão sugerida pela meta de ${u.meta} dia${u.meta>1?'s':''} por semana.`:'');
+  plano=planoAtivo(n);desenha();
+}
+
+function gerar(){
+  const n=+$('tNivel').value,div=DIV[$('tDiv').value],p=padrao();
+  if(n===0){
+    plano=[{t:'Sessão de recuperação ativa',g:'Mobilidade',ex:EX.Mobilidade.slice(0,5).map(x=>exItem(x,'Mobilidade',p))}];
+  }else{
+    const alvoEx=[0,5,6,7,8][n];
+    plano=div.map((g,i)=>{
+      const base=Math.floor(alvoEx/g.length),sobra=alvoEx%g.length;
+      return{t:'Treino '+String.fromCharCode(65+i),g:g.join(' + '),
+        ex:g.flatMap((m,j)=>{const cap=m==='Cardio'?2:EX[m].length,q=Math.min(cap,Math.max(1,base+(j<sobra?1:0)));return EX[m].slice(0,q).map(x=>exItem(x,m,p))})};
+    });
+  }
+  gravaPlano();desenha();
+}
+
+function mudou(){gravaPlano();impacto()}
+
+function impacto(){
+  const el=$('tImpacto'),n=$('tAluno').value,H=hist(n),c=cargaPlano(plano);
+  if(c===null){el.innerHTML='';return}
+  const ses=plano.length,ad=ajCarga(c),mt=H.length?H[H.length-1].meta:null;
+  el.innerHTML=`<div class="prox"><small>Impacto deste treino no gráfico</small><b>Carga ${c}% · ${ses} treino${ses>1?'s':''} por semana</b><span>${Math.round(volume(plano))} séries por semana. ${H.length?`A previsão do próximo treino muda ${sinal(ad)} pts por causa dessa carga.`:'Avalie o aluno para ver o efeito na previsão.'}${mt?` Meta do aluno: ${mt} dia${mt>1?'s':''} por semana.`:''}</span></div>`;
+}
+
+function desenha(){
+  const nome=$('tAluno').value,H=hist(nome),fr=H.length?fracos(H):[],n=+$('tNivel').value;
+  $('tPlano').innerHTML=plano.map((d,i)=>`<div class="card"><h2>${d.t} — ${nome}</h2><p class="help">${d.g?'Foco: '+d.g+'. ':''}${n===0?'Foco em recuperação, sem esforço intenso.':'Esforço alvo: RPE '+RPE([10,30,50,70,90][n])+' (escala de 1 a 10).'}</p>`+
+    d.ex.map((e,j)=>`<div class="ex"><span class="exn">${e.n}<small>Descanso: ${e.d}</small></span><input type="number" min="1" value="${e.s}" aria-label="Séries" onchange="plano[${i}].ex[${j}].s=this.value;mudou()"><span>×</span><input type="text" value="${e.r}" aria-label="Repetições" onchange="plano[${i}].ex[${j}].r=this.value;mudou()"><button class="x" aria-label="Remover exercício" onclick="plano[${i}].ex.splice(${j},1);mudou();desenha()">✕</button></div>`).join('')+
+    `<div class="add"><select id="add${i}">${Object.entries(EX).map(([g,l])=>`<optgroup label="${g}">${l.map(x=>`<option>${x}</option>`).join('')}</optgroup>`).join('')}</select><button class="btn alt sm" onclick="addEx(${i})">Adicionar</button></div></div>`).join('')+
+    (plano.length?`<div class="card"><h2>Recuperação</h2><ul class="an"><li>Hidratação ao longo do dia e proteína em todas as refeições.</li><li>Dormir de 7 a 9 h entre os treinos.</li>${fr.map(f=>`<li><b>${f.q.n}:</b> ${TIPS[f.q.k]}</li>`).join('')}</ul></div>`:'');
+  $('tAcoes').style.display=plano.length?'grid':'none';
+  impacto();
+}
+
+function addEx(i){
+  const nome=$('add'+i).value;
+  plano[i].ex.push(exItem(nome,grupoDe(nome),padrao()));gravaPlano();desenha();
+}
+function salvarT(){
+  const t=getT();t[$('tAluno').value]=plano;
+  try{localStorage.setItem('treinos',JSON.stringify(t));alert('Treino salvo para '+$('tAluno').value+'. O gráfico já considera este treino.')}catch(e){alert('Não foi possível salvar neste navegador.')}
+}
+
+/* ---------- EVOLUÇÃO ---------- */
+const fd=d=>new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+const sinal=v=>(v>0?'+':'')+v.toFixed(0);
+const dividir=a=>{const m=Math.ceil(a.length/2);return a.length>=4?[a.slice(0,m),a.slice(m)]:[a.slice(0,1),a.slice(-1)]};
+
+function evolucao(){
+  const ns=nomes(),sel=$('selAluno'),atual=sel.value;
+  sel.innerHTML=ns.length?ns.map(n=>`<option>${n}</option>`).join(''):'<option value="">Nenhum aluno avaliado</option>';
+  if(ns.includes(atual))sel.value=atual;
+  const vz=$('vazio');
+  const todas=hist(sel.value);
+  if(todas.length<2){
+    $('evo').style.display='none';vz.style.display='block';
+    vz.innerHTML=ns.length?'<b>Faltam dados.</b> Faça pelo menos 2 registros deste aluno para ver a evolução.':'<b>Nenhuma avaliação ainda.</b> Faça a primeira na aba Avaliar.';
+    return;
+  }
+  vz.style.display='none';$('evo').style.display='block';
+  const fim=new Date(todas[todas.length-1].data),ini=new Date(fim.getTime()-30*864e5);
+  let L=todas.filter(x=>new Date(x.data)>=ini);
+  if(L.length<2)L=todas.slice(-2);
+  const span=Math.max(1,Math.round((new Date(L[L.length-1].data)-new Date(L[0].data))/864e5));
+  const [A,B]=dividir(L),pA=avg(A.map(x=>x.pontos)),pB=avg(B.map(x=>x.pontos)),dp=pB-pA;
+  const tend=dp>=8?['melhora','up']:dp<=-8?['queda','down']:['estabilidade',''];
+  const Lr=L.filter(x=>!x.nt),falt=L.length-Lr.length,fqs=L.map(freqPct).filter(v=>v!==null);
+
+  $('periodo').textContent=`${L.length} registros entre ${fd(L[0].data)} e ${fd(L[L.length-1].data)} (${span} dias)`+(span<25?' — período parcial: a análise de 30 dias fica completa com registros ao longo do mês.':'.');
+  $('stats').innerHTML=[['Avaliações',Lr.length],['Média',avg(L.map(x=>x.pontos)).toFixed(0)],['Última',L[L.length-1].pontos],['Variação',`<span class="${tend[1]}">${sinal(dp)}</span>`],['Dias sem treino',`<span class="${falt?'down':''}">${falt}</span>`],['Frequência',fqs.length?Math.round(avg(fqs))+'%':'—']]
+    .map(s=>`<div class="stat"><small>${s[0]}</small><b>${s[1]}</b></div>`).join('');
+
+  if(linha)linha.destroy();
+  linha=new Chart($('linha'),{type:'line',
+    data:montaDados(L,{pr:projecao(todas).p,fracos:false}),
+    options:opcoes([sel.value,`evolução de ${fd(L[0].data)} a ${fd(L[L.length-1].data)}`],L),plugins:[bg]});
+
+  const dims=[];
+  if(Lr.length){const [a1,b1]=dividir(Lr);Q.forEach(q=>{const a=avg(a1.map(x=>pct(x,q))),b=avg(b1.map(x=>pct(x,q)));dims.push({n:q.n,a,b,d:b-a,m:avg(Lr.map(x=>pct(x,q)))})})}
+  const Lf=L.filter(x=>freqPct(x)!==null);
+  if(Lf.length){const [a2,b2]=dividir(Lf),a=avg(a2.map(freqPct)),b=avg(b2.map(freqPct));dims.push({n:QF.n,a,b,d:b-a,m:avg(Lf.map(freqPct))})}
+  $('tab').innerHTML=dims.length?'<tr><th>Item</th><th>Início</th><th>Atual</th><th>Mudança</th></tr>'+dims.map(d=>`<tr><td>${d.n}</td><td>${d.a.toFixed(0)}%</td><td>${d.b.toFixed(0)}%</td><td class="${d.d>=5?'up':d.d<=-5?'down':''}">${d.d>=5?'▲':d.d<=-5?'▼':'='} ${sinal(d.d)} pp</td></tr>`).join(''):'';
+
+  const horas=Lr.map(x=>x.horas).filter(h=>h>0),dor=Lr.filter(x=>x.r.dor===0).length;
+  const dd=L.map(x=>x.dias).filter(v=>v!==null&&v!==undefined),mts=L.map(x=>x.meta).filter(Boolean),pesos=L.map(x=>x.peso).filter(Boolean);
+  const t=[];
+  t.push(`<b>Tendência geral:</b> ${tend[0]} na disponibilidade para treinar (média de ${pA.toFixed(0)} para ${pB.toFixed(0)} pontos).`);
+  if(dims.length){
+    const melhor=[...dims].sort((a,b)=>b.d-a.d)[0],pior=[...dims].sort((a,b)=>a.d-b.d)[0],fraco=[...dims].sort((a,b)=>a.m-b.m)[0];
+    if(melhor.d>=5)t.push(`<b>Maior avanço:</b> ${melhor.n} (${sinal(melhor.d)} pp).`);
+    if(pior.d<=-5)t.push(`<b>Ponto de atenção:</b> ${pior.n} caiu ${sinal(pior.d)} pp.`);
+    t.push(`<b>Item mais fraco no período:</b> ${fraco.n}, com média de ${fraco.m.toFixed(0)}%.`);
+  }
+  if(falt)t.push(`<b>Dias sem treino:</b> ${falt} de ${L.length} registros (cada falta tira ${AJ.falta} pts no gráfico).`);
+  if(horas.length)t.push(`<b>Sono:</b> média de ${avg(horas).toFixed(1)} h por noite${avg(horas)<7?' — abaixo do ideal, vale reforçar a rotina de descanso.':'.'}`);
+  if(dor)t.push(`<b>Dor:</b> relatada em ${dor} de ${Lr.length} avaliações${dor/Lr.length>=.3?' — acompanhe de perto e considere avaliação profissional.':'.'}`);
+  if(dd.length)t.push(`<b>Frequência:</b> média de ${avg(dd).toFixed(1)} dias treinados por semana${mts.length?` (meta: ${avg(mts).toFixed(1)})`:''}.`);
+  const pl=planoAtivo(sel.value),cp=cargaPlano(pl);
+  if(cp!==null)t.push(`<b>Treino do personal:</b> carga de ${cp}% em ${pl.length} treino${pl.length>1?'s':''} por semana; a previsão do próximo treino muda ${sinal(ajCarga(cp))} pts por causa dela.`);
+  if(pesos.length>1){const dpz=pesos[pesos.length-1]-pesos[0];t.push(`<b>Peso:</b> ${pesos[0]} kg → ${pesos[pesos.length-1]} kg (${dpz>0?'+':''}${dpz.toFixed(1)} kg).`)}
+  t.push('<span class="note">Análise orientativa, baseada nas respostas do aluno. Não substitui a avaliação do profissional.</span>');
+  $('texto').innerHTML=t.map(x=>`<li>${x}</li>`).join('');
+}
+
+function apagar(){
+  const n=$('selAluno').value;
+  if(n&&confirm(`Apagar todo o histórico de ${n}? Esta ação não pode ser desfeita.`)){
+    setDB(getDB().filter(x=>x.nome!==n));atualizaNomes();evolucao();
+  }
+}
+</script>
+<script>
+(function(){
+  var red=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var _aba=aba;aba=function(id){_aba(id);try{document.querySelector('.tabs').setAttribute('data-i',['avaliar','evolucao','treinos'].indexOf(id))}catch(e){}};
+  function prog(){var n=Q.filter(function(q){return radio(q.k)!==null}).length,b=document.querySelector('.prog');$('progI').style.width=(n/Q.length*100)+'%';b.setAttribute('aria-valuenow',n)}
+  document.addEventListener('change',function(e){if(e.target.type==='radio')prog()});
+  var _lim=limpar;limpar=function(){_lim();try{prog()}catch(e){}};
+  function count(el){var to=+el.textContent||0;if(red)return;var t0=performance.now();(function f(t){var k=Math.min(1,(t-t0)/1100);el.textContent=Math.round(to*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f)})(t0)}
+  var _calc=calcular;calcular=function(){
+    _calc();
+    if($('erro').style.display==='block'||$('resultado').style.display!=='block')return;
+    try{var r=$('ring'),v=r.style.getPropertyValue('--p');r.style.setProperty('--p',0);void r.offsetWidth;r.style.setProperty('--p',v);count($('pontuacao'))}catch(e){}
+  };
+  if('IntersectionObserver' in window&&!red){
+    var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.08});
+    document.querySelectorAll('.card').forEach(function(c){c.classList.add('rv');io.observe(c)});
+  }
+})();
+</script>
+</body>
+</html>
